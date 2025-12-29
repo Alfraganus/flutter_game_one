@@ -8,8 +8,8 @@ class Pipe extends PositionComponent {
 
   Pipe({
     required this.isFlipped,
-    required super.position
-  });
+    required super.position,
+  }): super(priority: 2);
 
   @override
   Future<void> onLoad() async{
