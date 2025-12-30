@@ -1,8 +1,11 @@
 import 'dart:ui';
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/palette.dart';
+import 'package:flutter_game_pne/components/HiddenCoin.dart';
+import 'package:flutter_game_pne/components/pipe.dart';
+import 'package:flutter_game_pne/flappy_dash_game.dart';
 
-class Dash extends PositionComponent {
+class Dash extends PositionComponent with CollisionCallbacks,HasGameRef<FlappyDashGame> {
   Dash()
       : super(
     position: Vector2(0, 0),
@@ -20,6 +23,13 @@ class Dash extends PositionComponent {
     await super.onLoad();
     debugMode = false;
     _dashSprite = await Sprite.load('dash.png');
+    final radius = size.x / 2;
+    final center = size / 2;
+    add(CircleHitbox(
+        radius: radius * 0.75,
+        position: center / 1.1,
+        anchor: Anchor.center
+    ));
   }
 
   @override
@@ -36,13 +46,19 @@ class Dash extends PositionComponent {
   void render(Canvas canvas) {
     super.render(canvas);
     _dashSprite.render(canvas, size: size);
+  }
 
+  @override
+  void onCollision(Set<Vector2> points, PositionComponent other) {
+    super.onCollision(points, other);
+    if(other is HiddenCoins) {
+      other.removeFromParent();
+      game.world.inreaseScore();
+      print('toched it');
+    } else if(other is Pipe) {
+      print('game is over');
+    }
   }
 }
 
 
-class Dash2 extends SpriteComponent {
-  Dash2({
-    required super.sprite
-  });
-}

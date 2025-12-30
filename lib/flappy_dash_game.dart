@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'FlappyDashWorld.dart';
 
-class FlappyDashGame extends FlameGame<FlappyDashWorld> with KeyboardEvents{
+class FlappyDashGame extends FlameGame<FlappyDashWorld> with KeyboardEvents, HasCollisionDetection{
   FlappyDashGame()
       : super(
     world: FlappyDashWorld(),

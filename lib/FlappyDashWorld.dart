@@ -9,7 +9,9 @@ import 'dash.dart';
 class FlappyDashWorld extends World with TapCallbacks,HasGameRef<FlappyDashGame> {
   late Dash _dash;
   late PipePair _lastPipe;
-  static const double pipesDistance = 350.0;
+  static const double pipesDistance = 330.0;
+  int _score = 0;
+  late TextComponent _scoreText;
 
   @override
   void onLoad() {
@@ -17,6 +19,12 @@ class FlappyDashWorld extends World with TapCallbacks,HasGameRef<FlappyDashGame>
     add(DashBackground());
     add(_dash = Dash());
     _generatePipes();
+    game.camera.viewfinder.add(
+        _scoreText = TextComponent(
+        text: _score.toString(),
+        position: Vector2(0, -(game.size.y / 2))
+      )
+    );
   }
 
   void _generatePipes({int count = 5, double fromX = 0.0}) {
@@ -36,16 +44,21 @@ class FlappyDashWorld extends World with TapCallbacks,HasGameRef<FlappyDashGame>
     _dash.jump();
   }
 
+  void inreaseScore() {
+    _score +=1;
+  }
+
   @override
   void update(double dt) {
     super.update(dt);
+    _scoreText.text = _score.toString();
     if(_dash.x >= _lastPipe.x) {
       _generatePipes(
-        fromX: pipesDistance
+        fromX: _lastPipe.x + pipesDistance
       );
       removePipes();
     }
-    game.camera.viewfinder.zoom = 0.05 ;
+    // game.camera.viewfinder.zoom = 0.05 ;
   }
   void removePipes() {
     final pipes = children.whereType<PipePair>();
